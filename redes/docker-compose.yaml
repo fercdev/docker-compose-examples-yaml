@@ -1,0 +1,13 @@
+services:
+  backend:
+    image: nginx:alpine
+    networks:
+      - app_net
+
+  frontend:
+    image: nginx:alpine
+    networks:
+      - app_net
+
+networks:
+  app_net:

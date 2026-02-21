@@ -1,0 +1,7 @@
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: nginx_dev
+    ports:
+      - 9092:80

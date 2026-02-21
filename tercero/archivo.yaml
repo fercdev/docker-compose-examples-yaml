@@ -1,0 +1,6 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: nginx_yaml
+    ports:
+      - 9095:80

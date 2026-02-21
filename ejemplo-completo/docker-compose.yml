@@ -1,0 +1,85 @@
+services:
+  backend:
+    container_name: nombre_container  # sirve para darle el nombre al container
+    image: my-backend-image:1.0  # sirve para referirnos a la imagen del container
+
+    build:                      # en caso no quiera usar una imagen, puedo utilizar build
+      context: .                # context es la ruta donde esta mi archivo Dockerfile
+      dockerfile: Dockerfile    # es el nombre del archivo
+    
+    hostname: backend-host      # nombre del host de mi container a la interna
+
+    restart: always             # politicas de reinicio del container (no, always, on-failure, unless-stopped)
+
+    ports:
+      - 3000:3000               # mapeo de puertos: izquiera(host):derecha(puerto_container)
+
+    expose:
+      - 3000                    # solo expone el puerto a otros contenedores (interna de docker)
+
+    environment:                # para adicionar variables de entorno
+      NODE_ENV: prd
+      DB_HOST: database
+      DB_PORT: 3306
+    
+    env_file:                   # para cargar variables de entorno desde un archivo
+      - ./backend/.env
+
+    volumes:                    # para crear volumenes 
+      - .:/app                  # uno de tipo bind
+      - backend_logs:/var/log/app  # otro con un volumen nombrado, montado en la ruta "/var/log/app"
+
+    networks:                   # para crear una red personalizada
+      - app_network
+    
+    depends_on:                 # para generar dependencia entre servicios -> permite empezar cuando finaliza otro servicio
+      database:
+        condition: service_healthy
+
+    command: npm run start      # para definir un comando de inicializacion
+    entrypoint: ["sh", "-c", "npm run start"]      # para definir el punto de inicio del container
+
+    working_dir: /app
+    user: "1000:1000"           # para ejecutar el container con un usuario:grupo en especifico
+
+    stdin_open: true            # mantener el modo interactivo abierto
+
+    healthcheck:                # verifica la salud del container una vez levantada
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    deploy:                     #se usa para Docker Swarm
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:                    #se usa para Docker Swarm  -- configuracion de logging
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+    app_network:
+      driver: bridge
+      name: custom_app_network
+
+volumes:
+  backend_logs:
+    driver: local
+
+secrets:                        # se usa para Docker Swarm
+  db_password:
+    file: ./secrets/db_password.txt
+
+configs:                        # se usa para Docker Swarm
+  mysql_config:
+    file: ./config/mysql_config.cnf

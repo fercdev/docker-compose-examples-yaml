@@ -1,0 +1,7 @@
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: nginx_test
+    ports:
+      - 9093:80
