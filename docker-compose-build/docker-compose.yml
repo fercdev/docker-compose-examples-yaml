@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    container_name: backend_container
+
+    ports:
+      - 5000:3000
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    
+    volumes:
+      - backend_logs:/app/logs
+
+volumes:
+  backend_logs:
