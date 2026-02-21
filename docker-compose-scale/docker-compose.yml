@@ -1,0 +1,26 @@
+services:
+  flask:
+    build:
+      context: ./flask_app
+      dockerfile: Dockerfile
+    #container_name: flask_app_c
+    environment:
+      FLASK_ENV: development
+    expose:
+      - 5000
+    networks:
+      - app-network-flask
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx_lb
+    ports:
+      - 9090:80
+    depends_on:
+      - flask
+    networks:
+      - app-network-flask
+
+networks:
+  app-network-flask:
