@@ -1,0 +1,44 @@
+services:
+  mysql:
+    container_name: db_mysql
+    image: fercdevv/mysql_application:latest
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd123
+      MYSQL_DATABASE: demo_db
+    
+    volumes:
+      - db_backup_v:/var/lib/mysql
+
+    networks:
+      - db_backup_network
+    
+    ports:
+      - 3307:3306
+    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  db-copy:
+    image: mysql:8
+    container_name: copy-db
+    volumes:
+      - ./db-backup_noscript_db:/backup
+    entrypoint: /bin/bash -c "mysqldump -u root -ppwd123 -h mysql demo_db > /backup/backup_noscript_db.sql" && echo "backup finalizado"
+    depends_on:
+      mysql: 
+        condition: service_healthy
+    networks:
+      - db_backup_network
+  
+
+volumes:
+  db_backup_v:
+
+networks:
+  db_backup_network:
+

@@ -1,0 +1,40 @@
+services:
+  mysql:
+    container_name: db_mysql
+    image: fercdevv/mysql_application:latest
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd123
+      MYSQL_DATABASE: demo_db
+    
+    volumes:
+      - db_backup_v:/var/lib/mysql
+
+    networks:
+      - db_backup_network
+    
+    ports:
+      - 3307:3306
+  backup:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd123
+      MYSQL_DATABASE: demo_db
+      MYSQL_HOST: mysql
+      BACKUP_INTERVAL: 3600
+    volumes:
+      - ./db-backup:/backup
+      - ./backup-script/database_backup_script.sh:/usr/local/bin/script.sh
+    entrypoint: /usr/local/bin/script.sh
+    networks:
+      - db_backup_network
+
+
+
+networks:
+  db_backup_network:
+    driver: bridge
+    
+volumes:
+  db_backup_v:
