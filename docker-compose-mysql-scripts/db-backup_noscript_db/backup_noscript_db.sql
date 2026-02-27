@@ -37,7 +37,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Juan Perez','juan.perez@example.com','2026-02-26 01:53:55'),(2,'Luis Cruz','luis.cruz@example.com','2026-02-26 01:53:55'),(3,'Ana Lopez','ana.lopez@example.com','2026-02-26 01:53:55');
+INSERT INTO `usuarios` VALUES (1,'Juan Perez','juan.perez@example.com','2026-02-27 01:49:02'),(2,'Luis Cruz','luis.cruz@example.com','2026-02-27 01:49:02'),(3,'Ana Lopez','ana.lopez@example.com','2026-02-27 01:49:02');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-26  1:54:03
+-- Dump completed on 2026-02-27  1:50:02

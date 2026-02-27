@@ -26,6 +26,7 @@ services:
   db-copy:
     image: mysql:8
     container_name: copy-db
+    restart: always
     volumes:
       - ./db-backup_noscript_db:/backup
     entrypoint: /bin/bash -c "mysqldump -u root -ppwd123 -h mysql demo_db > /backup/backup_noscript_db.sql" && echo "backup finalizado"

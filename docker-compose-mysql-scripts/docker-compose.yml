@@ -18,6 +18,7 @@ services:
       - 3307:3306
   backup:
     image: mysql:8.0
+    container_name: db_backup_script
     environment:
       MYSQL_ROOT_PASSWORD: pwd123
       MYSQL_DATABASE: demo_db
@@ -26,7 +27,7 @@ services:
     volumes:
       - ./db-backup:/backup
       - ./backup-script/database_backup_script.sh:/usr/local/bin/script.sh
-    entrypoint: /usr/local/bin/script.sh
+    entrypoint: ["sh", "/usr/local/bin/script.sh"]
     networks:
       - db_backup_network
 

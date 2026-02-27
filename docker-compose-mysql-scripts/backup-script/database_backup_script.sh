@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 while ! mysqladmin ping -h"$MYSQL_HOST" --silent; do
     echo "Esperando a que la bd inicialice correctamente"
